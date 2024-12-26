@@ -13,6 +13,7 @@ const { authResolvers } = require('./src/resolvers/authresolver');
 const connectDB = require('./src/config/db');
 const { updateBestSellers } = require('./src/services/productService');
 const Product = require('./src/models/Product');
+const { authentication } = require('./src/middleware/authmiddleware');
 
 const app = express();
 app.use(express.json());
@@ -52,12 +53,14 @@ cron.schedule('* * * * *', async () => {
   }
 });
 
-const server = new ApolloServer({ typeDefs, resolvers ,uploads:true});
+const server = new ApolloServer({ typeDefs, resolvers ,uploads:true,
+  context:authentication
+
+});
 const startServer = async () => {
   await server.start();
   app.use(graphqlUploadExpress());
   server.applyMiddleware({ app });
-
   app.listen(4000, () => {
     console.log(`Server running at http://localhost:4000${server.graphqlPath}`);
   });
@@ -66,8 +69,7 @@ const startServer = async () => {
 // Start server
 startServer();
 
-// // Routes
-// app.use('/auth', router);
+
 
 
 

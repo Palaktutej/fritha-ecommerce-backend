@@ -8,7 +8,12 @@ const categoryResolver = {
     getCategoryById: categoryService.getCategoryById,
   },
   Mutation: {
-    createCategory: async (_, { name, description, imageUrl  }) => {
+    createCategory: async (_, { name, description, imageUrl  },context) => {
+      console.log(context.user);
+      if(!context.user)
+        throw Error("You must be logged in to create a category");
+      if(!context.user.role.includes("admin"))
+        throw Error("You must be an admin to create a category");
       console.log("Received args in createCategory:", { name, description, imageUrl });
       try {
         const categoryData = {

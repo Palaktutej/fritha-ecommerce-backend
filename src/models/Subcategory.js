@@ -59,12 +59,7 @@ const subcategorySchema = new mongoose.Schema(
     imageUrl: {
       type: [String],
       trim: true,
-    },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // References the User collection
-      required: true,
-    },
+    }
   },
   {
     timestamps: true,

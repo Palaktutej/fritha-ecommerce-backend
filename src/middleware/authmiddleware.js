@@ -2,27 +2,27 @@
 // authMiddleware.js
 const jwt = require('jsonwebtoken');
 
-const AuthMiddleware = async (req, res, next) => {
+const authentication = async ({req,res}) => {
   try {
     // Get the token from cookies
-    const authToken = req.cookies.token;
+    console.log(req.headers.authorization);
+    const authToken = req.headers.authorization.split(' ')[1];
     if (!authToken) {
-      return res.status(403).json({ status: 'failed', message: 'Unauthorized user!' });
+      return null;
     }
-
     // Verify the token
-    const userInfo = jwt.verify(authToken, process.env.SECRET_KEY);
-    if (userInfo) {
-      req.user_id = userInfo.user_id; // Store user_id in the request
-      next(); // Allow the request to proceed
+    const decoded = jwt.verify(authToken, process.env.SECRET_KEY);
+    if (decoded) {
+       return {user:decoded};
+      
     } else {
-      return res.status(403).json({ status: 'failed', message: 'Unauthorized user!' });
+      return null
     }
   } catch (err) {
     console.log(err);
-    return res.status(403).json({ status: 'failed', message: 'Unauthorized user!' });
+    return null;
   }
 };
 
-module.exports = { AuthMiddleware };
+module.exports = { authentication };
 

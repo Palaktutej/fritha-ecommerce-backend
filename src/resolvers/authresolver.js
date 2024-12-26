@@ -256,16 +256,16 @@ const authResolvers = {
         }
 
         const token = jwt.sign(
-          { user_id: user._id, email: user.email },
+          { id: user._id,name: user.firstName+user.lastName, email: user.email,role:'admin', },
           process.env.SECRET_KEY,
           { expiresIn: '1h' }
         );
 
-        res.cookie('token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 3600000, // 1-hour expiration
-        });
+        // res.cookie('token', token, {
+        //   httpOnly: true,
+        //   secure: process.env.NODE_ENV === 'production',
+        //   maxAge: 3600000, // 1-hour expiration
+        // });
 
         return {
           success: true,
